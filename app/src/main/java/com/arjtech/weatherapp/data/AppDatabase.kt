@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(   // @Database annotation: Tells Room that this class represents a Room database.
     entities = [PlaceWeather::class],  // The tables in the database. Here, you have one table, places_weather represented by the PlaceWeather entity.
-    version = 1,    // Database version. Used for migrations if the schema changes.
+    version = 1,    // Database version. Used for migrations if the schema changes. Like if we change the table structure for eg. adding new column, then we need to increase the version to 2 and define migration. Otherwise app crashes.
     exportSchema = false   // Room won’t export the database schema into a JSON file (for version control).
 )
 
@@ -37,6 +37,13 @@ abstract class AppDatabase : RoomDatabase() {    // Extends RoomDatabase which i
         }
     }
 }
+
+// Why we are using Room Database
+//      Ans: Api data disappears when the app closes . It will be permanently stored in Room database even without the Internet.
+//          Room has main 3 parts:  Entity -> the table in db,
+//                                  DAO -> A manager that talks to the database. (all the operations like insert, delete, update etc)  and
+//                                  Database -> tells the room which table exist and which DAO to use
+//   How data flow in our app: UI → ViewModel → Repository → DAO → Database And reverse when reading.
 
 
 // what do you mean by thread in our case ->
@@ -131,3 +138,12 @@ abstract class AppDatabase : RoomDatabase() {    // Extends RoomDatabase which i
 //I used @Volatile to make sure the INSTANCE variable is immediately visible to all threads.
 //I used synchronized block to prevent multiple threads from creating multiple database instances simultaneously.
 //This ensures thread safety and avoids race conditions.
+
+// Diff between SQLite and Room
+
+//    | SQLite          | Room                |
+//    | --------------- | ------------------- |
+//    | Manual SQL      | Annotation-based    |
+//    | Error-prone     | Compile-time checks |
+//    | Harder to use   | Easier              |
+//    | No Flow support | Flow support        |

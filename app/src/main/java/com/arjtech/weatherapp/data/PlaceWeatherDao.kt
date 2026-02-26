@@ -3,7 +3,7 @@ package com.arjtech.weatherapp.data
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
-@Dao
+@Dao            // Data Access Object
 interface PlaceWeatherDao {
 
     @Query("SELECT * FROM places_weather ORDER BY lastUpdated DESC")
@@ -20,3 +20,5 @@ interface PlaceWeatherDao {
     @Delete
     suspend fun deletePlace(place: PlaceWeather)
 }
+
+// Insert and delete are suspend fns because it does not run on the main thread . Instead it must run in the background.
